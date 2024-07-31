@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { BellIcon } from '@heroicons/react/24/outline';
+
 
 export function Header() {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -43,6 +45,14 @@ export function Header() {
                     <Link to="/sign-up" className="flex py-2 text-base font-medium text-dark hover:text-primary lg:ml-10 lg:inline-flex">
                       Criar Conta
                     </Link>
+
+                    <div className="relative">
+                      {/* Ícone de Notificações */}
+                      <BellIcon className="w-8 h-8 text-gray-600 cursor-pointer hover:text-primary transition duration-200" />
+                      <div className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full -translate-x-1/2 -translate-y-1/2">
+                        3
+                      </div>
+                    </div>
                   </li>
                 </ul>
               </nav>

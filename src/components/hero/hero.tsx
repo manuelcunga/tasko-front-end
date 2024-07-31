@@ -1,3 +1,8 @@
+import HeroImg from '../../assets/img/hero-image-01.png'
+import Client1 from '../../assets/img/client1.webp'
+import Client2 from '../../assets/img/client2.webp'
+import Client3 from '../../assets/img/client3.webp'
+
 export function Hero() {
     return (
       <div id="home" className="relative bg-white pt-[120px] pb-[110px] lg:pt-[150px]">
@@ -44,13 +49,13 @@ export function Hero() {
                   </h6>
                   <div className="flex items-center">
                     <div className="block py-3 mr-4">
-                      <img src="../../assets/img/client1.webpp" alt="cliente 1" />
+                      <img src={Client1} alt="cliente 1" />
                     </div>
                     <div className="block py-3 mr-4">
-                      <img src="../../assets/img/client2.webp" alt="cliente 2" />
+                      <img src={Client2} alt="cliente 2" />
                     </div>
                     <div className="block py-3">
-                      <img src="../../assets/img/client3.webp" alt="cliente 3" />
+                      <img src={Client3} alt="cliente 3" />
                     </div>
                   </div>
                 </div>
@@ -60,7 +65,7 @@ export function Hero() {
             <div className="w-full px-4 lg:w-6/12">
               <div className="lg:ml-auto lg:text-right">
                 <div className="relative z-10 inline-block pt-11 lg:pt-0">
-                  <img src="../../assets/img/hero-image-01.png" alt="imagem principal" className="max-w-full lg:ml-auto rounded-[10px] rounded-tl-[150px]" />
+                  <img src={HeroImg} alt="imagem principal" className="max-w-full lg:ml-auto rounded-[10px] rounded-tl-[150px]" />
                   <span className="absolute -left-8 -bottom-8 z-[-1]">
                     <svg width="93" height="93" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <circle cx="2.5" cy="2.5" r="2.5" fill="#3056D3" />
