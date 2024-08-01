@@ -1,23 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import { useAuthForm } from '../../hooks/useAuthForm';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 export function Login() {
   const { email, setEmail, password, setPassword } = useAuthForm();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Email:', email);
-    console.log('Password:', password);
-  };
+    console.log('Submitting form...');
+    setLoading(true);
+    setError('');
 
-  console.log("Dados do form", handleSubmit)
+    try {
+      console.log('Making axios request...');
+      const response = await axios.post('http://localhost:9000/api/v1/auth/sign-in', {
+        email,
+        password,
+      });
+
+    
+
+      const data = response.data;
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      console.log('Dados do usuário:', data);
+
+      navigate('/dashboard');
+    } catch (err: any) {
+      console.error('Error during axios request:', err);
+      setError(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section id="login" className="pt-20 pb-12 lg:pt-[120px] lg:pb-[90px]">
       <div className="container mx-auto">
-      <div className="flex items-center mb-8">
+        <div className="flex items-center mb-8">
           <Link to="/" className="text-primary flex items-center">
             <ArrowLeftIcon className="w-6 h-6 mr-2" />
             Voltar para Home
@@ -73,11 +98,12 @@ export function Login() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 px-4 bg-primary text-white font-semibold rounded-md shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  className={`w-full py-2 px-4 bg-primary text-white font-semibold rounded-md shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  disabled={loading}
                 >
-                  Entrar
+                  {loading ? 'Entrando...' : 'Entrar'}
                 </button>
-
+                {error && <p className="mt-4 text-center text-red-500">{error}</p>}
                 <div className="mt-4 text-center">
                   <Link 
                     to="/sign-up" 

@@ -1,10 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BellIcon } from '@heroicons/react/24/outline';
-
 
 export function Header() {
   const [navbarOpen, setNavbarOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      const token = localStorage.getItem('token');
+      setIsAuthenticated(!!token);
+    };
+
+    checkAuthentication();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  };
 
   return (
     <header className="top-0 left-0 z-50 w-full sticky bg-white">
@@ -37,23 +50,36 @@ export function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/login" className="flex py-2 text-base font-medium text-dark hover:text-primary lg:ml-10 lg:inline-flex">
-                      Login
+                    <Link to="/jobs" className="flex py-2 text-base font-medium text-dark hover:text-primary lg:ml-10 lg:inline-flex">
+                      Serviços
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/sign-up" className="flex py-2 text-base font-medium text-dark hover:text-primary lg:ml-10 lg:inline-flex">
-                      Criar Conta
-                    </Link>
 
-                    <div className="relative">
-                      {/* Ícone de Notificações */}
-                      <BellIcon className="w-8 h-8 text-gray-600 cursor-pointer hover:text-primary transition duration-200" />
-                      <div className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 bg-red-600 text-white text-xs font-bold rounded-full -translate-x-1/2 -translate-y-1/2">
-                        3
-                      </div>
-                    </div>
-                  </li>
+                  {!isAuthenticated ? (
+                    <>
+                      <li>
+                        <Link to="/login" className="flex py-2 text-base font-medium text-dark hover:text-primary lg:ml-10 lg:inline-flex">
+                          Login
+                        </Link>
+                      </li>
+                      <li>
+                        <Link to="/sign-up" className="flex py-2 text-base font-medium text-dark hover:text-primary lg:ml-10 lg:inline-flex">
+                          Criar Conta
+                        </Link>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li>
+                        <button
+                          onClick={handleLogout}
+                          className="flex py-2 text-base font-medium text-dark hover:text-primary lg:ml-10 lg:inline-flex"
+                        >
+                          Sair
+                        </button>
+                      </li>
+                    </>
+                  )}
                 </ul>
               </nav>
             </div>

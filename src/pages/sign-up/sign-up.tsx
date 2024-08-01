@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function CreateAccount() {
   const [name, setName] = useState('');
@@ -8,16 +9,37 @@ export function CreateAccount() {
   const [password, setPassword] = useState('');
   const [nif, setNif] = useState('');
   const [phone, setPhone] = useState('');
-  const [addressID] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Name:', name);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('NIF:', nif);
-    console.log('Phone:', phone);
-    console.log('Address ID:', addressID);
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post('http://localhost:9000/api/v1/auth/signup', {
+        name,
+        email,
+        password,
+        nif,
+        phone, 
+        addressID: 'd7d8b2a9-452f-4ba0-afe4-4372d8036e05'
+      });
+
+      if (response.status !== 201) {
+        throw new Error('Falha na criação da conta, verifique os dados fornecidos.');
+      }
+
+     
+      navigate('/login');
+    } catch (err) {
+      console.error('Erro durante a requisição:', err);
+      setError('Ocorreu um erro ao criar a conta. Por favor, tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -48,6 +70,7 @@ export function CreateAccount() {
           <div className="w-full px-4 md:w-1/2 lg:w-1/3">
             <div className="mb-9 rounded-[20px] bg-white p-10 shadow-lg hover:shadow-2xl md:px-7 xl:px-10">
               <form onSubmit={handleSubmit}>
+                {error && <div className="mb-4 text-red-600">{error}</div>}
                 <div className="mb-6">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                     Nome
@@ -121,8 +144,9 @@ export function CreateAccount() {
                 <button
                   type="submit"
                   className="w-full py-2 px-4 bg-primary text-white font-semibold rounded-md shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  disabled={loading}
                 >
-                  Criar Conta
+                  {loading ? 'Criando conta...' : 'Criar Conta'}
                 </button>
               </form>
             </div>
